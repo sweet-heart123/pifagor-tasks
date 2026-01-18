@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Завдання на теорему Піфагора</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9fcff;
+      padding: 22px;
+    }
+    h1 {
+      color: #1a385d;
+    }
+    .task {
+      background: #e1ecf8;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 7px;
+    }
+    input {
+      width: 70px;
+      padding: 5px;
+    }
+    button {
+      margin-left: 8px;
+      padding: 4px 8px;
+    }
+    #score {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 10px;
+      color: #0b3c91;
+    }
+  </style>
+</head>
+<body>
+  <h1>Завдання на теорему Піфагора</h1>
+  <div id="tasks"></div>
+  <div id="score">Бали: 0 / 10</div>
+
+  <script>
+    let score = 0;
+    const tasks = [
+      { a: 3, b: 4, c: null },
+      { a: null, b: 5, c: 13 },
+      { a: 6, b: null, c: 10 },
+      { a: 8, b: 15, c: null },
+      { a: null, b: 12, c: 13 },
+      { a: 9, b: null, c: 15 },
+      { a: null, b: 7, c: 25 },
+      { a: 5, b: 12, c: null },
+      { a: null, b: 24, c: 26 },
+      { a: 7, b: null, c: 25 }
+    ];
+
+    const box = document.getElementById("tasks");
+
+    tasks.forEach((t, i) => {
+      let text = "";
+      if (t.a === null) text = `Знайди a: a² + ${t.b}² = ${t.c}²`;
+      else if (t.b === null) text = `Знайди b: ${t.a}² + b² = ${t.c}²`;
+      else text = `Знайди c: ${t.a}² + ${t.b}² = c²`;
+
+      const d = document.createElement("div");
+      d.className = "task";
+      d.innerHTML = `
+        <div>${text}</div>
+        <input id="i${i}" type="number">
+        <button onclick="check(${i})">Перевірити</button>
+        <div id="r${i}"></div>
+      `;
+      box.appendChild(d);
+    });
+
+    function check(i) {
+      const t = tasks[i];
+      let correct;
+      if (t.a === null) correct = Math.sqrt(t.c**2 - t.b**2);
+      else if (t.b === null) correct = Math.sqrt(t.c**2 - t.a**2);
+      else correct = Math.sqrt(t.a**2 + t.b**2);
+
+      const inp = document.getElementById("i" + i);
+      const val = parseFloat(inp.value);
+      const res = document.getElementById("r" + i);
+
+      if (res.dataset.done) return;
+
+      if (Math.abs(val - correct) < 0.01) {
+        res.textContent = "✅ Вірно!";
+        res.style.color = "green";
+        score++;
+      } else {
+        res.textContent = `❌ Невірно. Правильна: ${correct.toFixed(2)}`;
+        res.style.color = "red";
+      }
+      res.dataset.done = "true";
+      document.getElementById("score").textContent = `Бали: ${score} / ${tasks.length}`;
+    }
+  </script>
+</body>
+  </html>
